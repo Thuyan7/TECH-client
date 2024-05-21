@@ -1,8 +1,11 @@
 package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import database.DatabaseConnection;
 import javax.swing.JOptionPane;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -140,7 +143,7 @@ public class Register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterActionPerformed
-        String username = jTextField2.getText().trim();
+       String username = jTextField2.getText().trim();
         String password = new String(jPasswordField2.getPassword());
         String reEnterPassword = new String(jPasswordField1.getPassword());
 
@@ -159,7 +162,17 @@ public class Register extends javax.swing.JFrame {
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        if (isUsernameExists(username)) {
+            JOptionPane.showMessageDialog(this, "Username already exists. Please choose another one.", "Username Exists", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean isRegistered = registerUser(username, password);
+        if (isRegistered) {
+            JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to register user. Please try again later.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_RegisterActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
@@ -168,7 +181,7 @@ public class Register extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_loginActionPerformed
     
-     private boolean isPasswordValid(String password) {
+    private boolean isPasswordValid(String password) {
         if (password.length() < 8) {
             return false;
         }
@@ -178,6 +191,57 @@ public class Register extends javax.swing.JFrame {
         boolean hasDigit = password.matches(".*\\d.*");
 
         return hasUppercase && hasSpecialChar && hasDigit;
+    }
+
+    public boolean registerUser(String username, String password) {
+        Connection connection = DatabaseConnection.getConnection();
+        String hashedPassword = hashPassword(password);
+
+        String query = "INSERT INTO accoutuser (username, password) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            statement.setString(2, hashedPassword);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] byteData = md.digest();
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : byteData) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isUsernameExists(String username) {
+        Connection connection = DatabaseConnection.getConnection();
+        String query = "SELECT COUNT(*) FROM  accoutuser WHERE username = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
     /**
      * @param args the command line arguments
