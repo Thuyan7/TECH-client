@@ -215,75 +215,6 @@ public class Home extends javax.swing.JFrame {
         jScrollPane1.setViewportView(scrollPane);
     }
 
-    
-private void addChatPanel() {
-    // Panel chứa tất cả các tin nhắn
-    JPanel messagesPanel = new JPanel();
-    messagesPanel.setLayout(new BoxLayout(messagesPanel, BoxLayout.Y_AXIS));
-    
-    
-    JScrollPane messagesScrollPane = new JScrollPane(messagesPanel);
-    messagesScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    
-    // Panel chứa ô nhập tin nhắn
-    JPanel inputPanel = new JPanel(new BorderLayout());
-    JTextField messageField = new JTextField();
-    messageField.setPreferredSize(new Dimension(400, 30));  
-    messageField.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            String message = messageField.getText().trim();
-            if (!message.isEmpty()) {
-                //Panel chứa tin nhắn
-                JPanel singleMessageContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-                singleMessageContainer.setMaximumSize(new Dimension(messagesPanel.getWidth(), 50));
-                
-                KGradientPanel singleMessagePanel = new KGradientPanel();
-                singleMessagePanel.setLayout(new BorderLayout());
-                singleMessagePanel.setPreferredSize(new Dimension(200, 50)); 
-                singleMessagePanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-                singleMessagePanel.setkStartColor(new Color(51, 153, 255));
-                singleMessagePanel.setkEndColor(Color.white);
-                singleMessagePanel.setkBorderRadius(15);
-
-                JLabel messageLabel = new JLabel("<html><body>" + message + "</body></html>"); 
-                singleMessagePanel.add(messageLabel, BorderLayout.CENTER);
-
-                
-                singleMessageContainer.add(singleMessagePanel);
-                messagesPanel.add(Box.createVerticalStrut(10));
-                messagesPanel.add(singleMessageContainer);
-                messagesPanel.revalidate();
-                messagesPanel.repaint();
-
-                
-                messagesScrollPane.getVerticalScrollBar().setValue(messagesScrollPane.getVerticalScrollBar().getMaximum());
-
-                
-                messageField.setText("");
-            }
-        }
-    });
-    inputPanel.add(messageField, BorderLayout.CENTER);
-
-    // Thêm panel chứa tin nhắn vào panel chính
-    JPanel chatPanel = new JPanel(new BorderLayout());
-    chatPanel.add(messagesScrollPane, BorderLayout.CENTER);
-    chatPanel.add(inputPanel, BorderLayout.SOUTH);
-
-    
-    JScrollPane scrollPane = new JScrollPane(chatPanel);
-    scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-    jScrollPane1.setViewportView(scrollPane);
-}
-
-
-
-
-
-
-    
-
 
 
     /**
@@ -301,7 +232,6 @@ private void addChatPanel() {
         btLaptop = new com.k33ptoo.components.KButton();
         btPhone = new com.k33ptoo.components.KButton();
         logOut = new javax.swing.JLabel();
-        btPhone1 = new com.k33ptoo.components.KButton();
         kGradientPanel1 = new com.k33ptoo.components.KGradientPanel();
         setting = new com.k33ptoo.components.KGradientPanel();
         add = new javax.swing.JLabel();
@@ -364,25 +294,6 @@ private void addChatPanel() {
             }
         });
 
-        btPhone1.setText("CHAT");
-        btPhone1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btPhone1.setkAllowGradient(false);
-        btPhone1.setkBackGroundColor(new java.awt.Color(51, 153, 255));
-        btPhone1.setkBorderRadius(20);
-        btPhone1.setkHoverForeGround(new java.awt.Color(0, 0, 0));
-        btPhone1.setkHoverStartColor(new java.awt.Color(0, 0, 0));
-        btPhone1.setkSelectedColor(new java.awt.Color(255, 255, 255));
-        btPhone1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btPhone1MouseClicked(evt);
-            }
-        });
-        btPhone1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btPhone1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout MenuLayout = new javax.swing.GroupLayout(Menu);
         Menu.setLayout(MenuLayout);
         MenuLayout.setHorizontalGroup(
@@ -398,21 +309,16 @@ private void addChatPanel() {
                         .addGap(82, 82, 82))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
                         .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
-                        .addComponent(btPhone1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         MenuLayout.setVerticalGroup(
             MenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuLayout.createSequentialGroup()
-                .addGap(249, 249, 249)
+                .addGap(257, 257, 257)
                 .addComponent(btLaptop, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(80, 80, 80)
                 .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(btPhone1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
                 .addComponent(logOut)
                 .addGap(50, 50, 50))
         );
@@ -558,14 +464,6 @@ private void addChatPanel() {
     
     }//GEN-LAST:event_updatelbMouseClicked
 
-    private void btPhone1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btPhone1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btPhone1MouseClicked
-
-    private void btPhone1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPhone1ActionPerformed
-       addChatPanel();
-    }//GEN-LAST:event_btPhone1ActionPerformed
-
     public static void main(String args[]) { 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -605,7 +503,6 @@ private void addChatPanel() {
     private javax.swing.JLabel add;
     private com.k33ptoo.components.KButton btLaptop;
     private com.k33ptoo.components.KButton btPhone;
-    private com.k33ptoo.components.KButton btPhone1;
     private javax.swing.JLabel closelb;
     private javax.swing.JLabel deletelb;
     private com.formdev.flatlaf.ui.FlatMenuUI flatMenuUI1;
