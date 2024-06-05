@@ -2,11 +2,23 @@ package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import database.DatabaseConnection;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Base64;
+import javax.crypto.Cipher;
 import javax.swing.JOptionPane;
 
 /*
@@ -20,46 +32,27 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
     int attempts;
+
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
+
     }
     
-          private String md5Hash(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] messageDigest = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (byte b : messageDigest) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    // Method to validate login
     private boolean validateLogin(String username, String password) {
-        String hashedPassword = md5Hash(password);
-        Connection conn = null;
-        try {
-            conn = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM accoutuser WHERE username = ? AND password = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, username);
-                pstmt.setString(2, hashedPassword);
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    return rs.next();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        try (Socket socket = new Socket("192.168.1.22", 1236);
+             OutputStream output = socket.getOutputStream(); 
+             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
+             InputStream input = socket.getInputStream();
+             ObjectInputStream objectInput = new ObjectInputStream(input)) {
+            objectOutput.writeObject(new String[]{"login", username, password});
+            objectOutput.flush();
+            return objectInput.readBoolean();
+        } catch (IOException ex) {
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(conn);
         }
     }
 
@@ -167,21 +160,28 @@ public class Login extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void kButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kButton1ActionPerformed
-      String enteredAdmin = jTextField2.getText();
-      String enteredPassword = new String(jPasswordField1.getPassword());
+       String username = jTextField2.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
 
-        if (validateLogin(enteredAdmin, enteredPassword)) {
-            JOptionPane.showMessageDialog(null, "Login Successful!");
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username and Password cannot be empty.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        boolean isLoggedIn = validateLogin(username, password);
+        if (isLoggedIn) {
+            JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             new Home().setVisible(true);
-            dispose();
+            this.dispose();
         } else {
             attempts++;
             if (attempts >= 3) {
-                JOptionPane.showMessageDialog(null, "Too many failed attempts. Exiting...");
+                JOptionPane.showMessageDialog(this, "Too many failed attempts. Exiting...", "Login Failed", JOptionPane.ERROR_MESSAGE);
                 System.exit(0);
             } else {
-                JOptionPane.showMessageDialog(null, "Incorrect username or password. Please try again.");
+                JOptionPane.showMessageDialog(this, "Incorrect username or password. Please try again.", "Login Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_kButton1ActionPerformed

@@ -2,21 +2,40 @@ package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import database.DatabaseConnection;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import javax.swing.JOptionPane;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PublicKey;
+import java.security.PrivateKey;
+import java.security.KeyFactory;
+import java.security.spec.X509EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+import javax.crypto.Cipher;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author AN
  */
 public class Register extends javax.swing.JFrame {
+
     int attempts;
+    private static PublicKey serverPublicKey;
+
     /**
      * Creates new form Login
      */
@@ -141,9 +160,10 @@ public class Register extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    
 
     private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterActionPerformed
-       String username = jTextField2.getText().trim();
+        String username = jTextField2.getText().trim();
         String password = new String(jPasswordField2.getPassword());
         String reEnterPassword = new String(jPasswordField1.getPassword());
 
@@ -152,18 +172,8 @@ public class Register extends javax.swing.JFrame {
             return;
         }
 
-        if (!isPasswordValid(password)) {
-            JOptionPane.showMessageDialog(this, "Password must contain at least one uppercase letter, one special character, and one digit.", "Invalid Password", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         if (!password.equals(reEnterPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Mismatch", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (isUsernameExists(username)) {
-            JOptionPane.showMessageDialog(this, "Username already exists. Please choose another one.", "Username Exists", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -174,75 +184,32 @@ public class Register extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Failed to register user. Please try again later.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_RegisterActionPerformed
+    
+     private boolean registerUser(String username, String password) {
+        try (Socket socket = new Socket("192.168.1.22", 1236);
+             OutputStream output = socket.getOutputStream();
+             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
+             InputStream input = socket.getInputStream();
+             ObjectInputStream objectInput = new ObjectInputStream(input)) {
+
+            objectOutput.writeObject(new String[]{username, password});
+            objectOutput.flush();
+
+            boolean isRegistered = objectInput.readBoolean();
+            return isRegistered;
+
+        } catch (EOFException eofEx) {
+        } catch (IOException ioEx) {
+        }
+        return false;
+}
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         Login login = new Login();
         login.setVisible(true);
         dispose();
     }//GEN-LAST:event_loginActionPerformed
-    
-    private boolean isPasswordValid(String password) {
-        if (password.length() < 8) {
-            return false;
-        }
 
-        boolean hasUppercase = !password.equals(password.toLowerCase());
-        boolean hasSpecialChar = password.matches(".*[!@#$%^&*(),.?\":{}|<>].*");
-        boolean hasDigit = password.matches(".*\\d.*");
-
-        return hasUppercase && hasSpecialChar && hasDigit;
-    }
-
-    public boolean registerUser(String username, String password) {
-        Connection connection = DatabaseConnection.getConnection();
-        String hashedPassword = hashPassword(password);
-
-        String query = "INSERT INTO accoutuser (username, password) VALUES (?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username);
-            statement.setString(2, hashedPassword);
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(password.getBytes());
-            byte[] byteData = md.digest();
-
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : byteData) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private boolean isUsernameExists(String username) {
-        Connection connection = DatabaseConnection.getConnection();
-        String query = "SELECT COUNT(*) FROM  accoutuser WHERE username = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, username);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                int count = resultSet.getInt(1);
-                return count > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
     /**
      * @param args the command line arguments
      */
@@ -274,7 +241,7 @@ public class Register extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Register().setVisible(true);
-               
+
             }
         });
     }
@@ -291,4 +258,5 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private com.k33ptoo.components.KButton login;
     // End of variables declaration//GEN-END:variables
+
 }

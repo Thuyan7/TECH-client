@@ -1,119 +1,108 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DataBase;
 
-import database.DatabaseConnection;
-import java.sql.*;
+import model.Laptop;
+
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import model.Laptop;
 
 /**
  *
  * @author AN
  */
 public class LaptopManager {
-    public static List<Laptop> getLaptop(){
+
+    private static final String SERVER_ADDRESS = "192.168.1.8";
+    private static final int SERVER_PORT = 1234;
+
+    public static List<Laptop> getLaptop() {
         List<Laptop> laptopList = new ArrayList<>();
-        String sql = "SELECT * FROM laptop";
-        try {
-           Connection con= DatabaseConnection.getConnection();
-            Statement stmt= con.createStatement();
-            ResultSet rs= stmt.executeQuery(sql);
-            
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String price = rs.getString("price");
-                String image = rs.getString("image");
-                String description = rs.getString("description"); 
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream input = new ObjectInputStream(socket.getInputStream())) {
 
-                Laptop laptop = new Laptop(id,name, price, image, description);
-                laptopList.add(laptop);
-            }
+            output.writeObject("GET_LAPTOPS");
+            output.flush();
 
-            DatabaseConnection.closeConnection(con);
-        } catch (Exception e) {
+            laptopList = (List<Laptop>) input.readObject();
+
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
         return laptopList;
     }
-    
-     public static void addLaptop(String name, String price, String des, String img) {
-        try {
-            Connection conn = DatabaseConnection.getConnection();
-            String sql = "INSERT INTO laptop (name, price, description, image) VALUES (?, ?, ?, ?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, name);
-            statement.setString(2, price);
-            statement.setString(3, des);
-            statement.setString(4, img);
 
-            int rowsInserted = statement.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("A new laptop was inserted successfully!");
-            }
-            DatabaseConnection.closeConnection(conn);
-        } catch (SQLException ex) {
+    public static void addLaptop(String name, String price, String des, String img) {
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream input = new ObjectInputStream(socket.getInputStream())) {
+
+            output.writeObject("ADD_LAPTOP");
+            output.writeObject(new String[]{name, price, des, img});
+            output.flush();
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
-     
-     public static void delete(Laptop l) {
-		String sql="DELETE FROM laptop WHERE id='"+l.getId()+"'";
-		try {
-			Connection con= DatabaseConnection.getConnection();
-			PreparedStatement ps= con.prepareStatement(sql);
-			ps.executeUpdate();
-			DatabaseConnection.closeConnection(con);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}
-public static void updateLaptop(Laptop l) {
-    String sql = "UPDATE laptop SET name=?, price=?, image=?, description=? WHERE id=?";
-    try {
-        Connection con = DatabaseConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, l.getName());
-        ps.setString(2, l.getPrice());
-        ps.setString(3, l.getImage());
-        ps.setString(4, l.getDescription());
-        ps.setInt(5, l.getId());
-        ps.executeUpdate();
-        DatabaseConnection.closeConnection(con);
-    } catch (Exception e) {
-        e.printStackTrace(); // Handle exception
-    }
-}
 
-public static Laptop getLaptopById(int id) {
-    Laptop laptop = null;
-    String sql = "SELECT * FROM laptop WHERE id = ?";
-    
-    try {
-        Connection con = DatabaseConnection.getConnection();
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, id);
-        ResultSet rs = pstmt.executeQuery();
-        
-        if (rs.next()) {
-            String name = rs.getString("name");
-            String price = rs.getString("price");
-            String image = rs.getString("image");
-            String description = rs.getString("description");
+    public static void delete(Laptop l) {
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream input = new ObjectInputStream(socket.getInputStream())) {
 
-            laptop = new Laptop(id, name, price, image, description);
+            output.writeObject("DELETE_LAPTOP");
+            output.writeObject(l.getId());
+            output.flush();
+
+            boolean success = input.readBoolean();
+            if (success) {
+                System.out.println("Laptop deleted successfully!");
+            } else {
+                System.out.println("Failed to delete laptop.");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-
-        DatabaseConnection.closeConnection(con);
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-    return laptop;
-}
 
+    public static void updateLaptop(Laptop l) {
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream input = new ObjectInputStream(socket.getInputStream())) {
 
+            output.writeObject("UPDATE_LAPTOP");
+            output.writeObject(l);
+            output.flush();
+
+            boolean success = input.readBoolean();
+            if (success) {
+                System.out.println("Laptop updated successfully!");
+            } else {
+                System.out.println("Failed to update laptop.");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static Laptop getLaptopById(int id) {
+        Laptop laptop = null;
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+             ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream input = new ObjectInputStream(socket.getInputStream())) {
+
+            output.writeObject("GET_LAPTOP_BY_ID");
+            output.writeObject(id);
+            output.flush();
+
+            laptop = (Laptop) input.readObject();
+
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return laptop;
+    }
 }

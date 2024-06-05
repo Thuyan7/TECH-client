@@ -232,6 +232,7 @@ public class Home extends javax.swing.JFrame {
         btLaptop = new com.k33ptoo.components.KButton();
         btPhone = new com.k33ptoo.components.KButton();
         logOut = new javax.swing.JLabel();
+        history = new com.k33ptoo.components.KButton();
         kGradientPanel1 = new com.k33ptoo.components.KGradientPanel();
         setting = new com.k33ptoo.components.KGradientPanel();
         add = new javax.swing.JLabel();
@@ -294,6 +295,25 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        history.setText("PURCHASE HISTORY");
+        history.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        history.setkAllowGradient(false);
+        history.setkBackGroundColor(new java.awt.Color(51, 153, 255));
+        history.setkBorderRadius(20);
+        history.setkHoverForeGround(new java.awt.Color(0, 0, 0));
+        history.setkHoverStartColor(new java.awt.Color(0, 0, 0));
+        history.setkSelectedColor(new java.awt.Color(255, 255, 255));
+        history.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                historyMouseClicked(evt);
+            }
+        });
+        history.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout MenuLayout = new javax.swing.GroupLayout(Menu);
         Menu.setLayout(MenuLayout);
         MenuLayout.setHorizontalGroup(
@@ -309,6 +329,9 @@ public class Home extends javax.swing.JFrame {
                         .addGap(82, 82, 82))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
                         .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
+                        .addComponent(history, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         MenuLayout.setVerticalGroup(
@@ -318,7 +341,9 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(btLaptop, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80)
                 .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
+                .addGap(81, 81, 81)
+                .addComponent(history, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addComponent(logOut)
                 .addGap(50, 50, 50))
         );
@@ -464,6 +489,14 @@ public class Home extends javax.swing.JFrame {
     
     }//GEN-LAST:event_updatelbMouseClicked
 
+    private void historyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_historyMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_historyMouseClicked
+
+    private void historyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_historyActionPerformed
+
     public static void main(String args[]) { 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -506,6 +539,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel closelb;
     private javax.swing.JLabel deletelb;
     private com.formdev.flatlaf.ui.FlatMenuUI flatMenuUI1;
+    private com.k33ptoo.components.KButton history;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

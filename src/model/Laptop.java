@@ -4,11 +4,13 @@
  */
 package model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author AN
  */
-public class Laptop {
+public class Laptop implements Serializable{
     private int id;
     private String name;
     private String price;

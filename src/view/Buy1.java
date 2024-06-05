@@ -12,6 +12,9 @@ import javax.swing.JTextArea;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.sql.SQLException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -149,66 +152,83 @@ public class Buy1 extends javax.swing.JFrame {
         String price = priceProduct.getText();
         String quantity = quantityTxt.getValue().toString();
 
-       try {
+        try {
             java.sql.Connection conn = DatabaseConnection.getConnection();
-            String sql =  "INSERT INTO user (name, id, phone) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO user (name, id, phone) VALUES (?, ?, ?)";
             java.sql.PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, name);
             statement.setString(2, cccd);
             statement.setString(3, phone);
-          
+
             statement.executeUpdate();
             statement.close();
-    } catch (Exception e) {
-        e.printStackTrace();
-        // Xử lý ngoại lệ nếu có
-    }//GEN-LAST:event_kButton2ActionPerformed
-    try {
-        File xmlFile = new File("C:\\HP\\purchase.xml");
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document document;
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Xử lý ngoại lệ nếu có
+    }                                        
+        try {
+            File xmlFile = new File("purchase.xml");
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document document;
 
-        if (xmlFile.exists()) {
-            // Nếu tệp đã tồn tại, load tài liệu XML từ tệp đó
-            document = docBuilder.parse(xmlFile);
-        } else {
-            // Nếu tệp chưa tồn tại, tạo một tài liệu XML mới
-            document = docBuilder.newDocument();
-            // Tạo phần tử gốc <Products>
-            Element productsElement = document.createElement("Products");
-            document.appendChild(productsElement);
+            if (xmlFile.exists()) {
+                // Nếu tệp đã tồn tại, load tài liệu XML từ tệp đó
+                document = docBuilder.parse(xmlFile);
+            } else {
+                // Nếu tệp chưa tồn tại, tạo một tài liệu XML mới
+                document = docBuilder.newDocument();
+                // Tạo phần tử gốc <Products>
+                Element productsElement = document.createElement("Products");
+                document.appendChild(productsElement);
+            }
+
+            // Tạo phần tử con <Product> và các phần tử con của nó
+            Element orderElement = document.createElement("Product");
+
+            Element productNameElement = document.createElement("name");
+            productNameElement.appendChild(document.createTextNode(productName));
+            orderElement.appendChild(productNameElement);
+
+            Element priceElement = document.createElement("price");
+            priceElement.appendChild(document.createTextNode(price));
+            orderElement.appendChild(priceElement);
+
+            Element quantityElement = document.createElement("quantity");
+            quantityElement.appendChild(document.createTextNode(quantity));
+            orderElement.appendChild(quantityElement);
+
+            // Gắn phần tử <Product> vào phần tử gốc <Products>
+            document.getDocumentElement().appendChild(orderElement);
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            // Ghi tài liệu XML vào tệp
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(xmlFile);
+            transformer.transform(source, result);
+            
+            String hostname = "192.168.1.8";
+            int port = 1234;
+
+            try (Socket socket = new Socket(hostname, port)) {
+                FileInputStream fileInputStream = new FileInputStream(xmlFile);
+                OutputStream outputStream = socket.getOutputStream();
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                fileInputStream.close();
+            } 
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-
-        // Tạo phần tử con <Product> và các phần tử con của nó
-        Element orderElement = document.createElement("Product");
-
-        Element productNameElement = document.createElement("name");
-        productNameElement.appendChild(document.createTextNode(productName));
-        orderElement.appendChild(productNameElement);
-
-        Element priceElement = document.createElement("price");
-        priceElement.appendChild(document.createTextNode(price));
-        orderElement.appendChild(priceElement);
-
-        Element quantityElement = document.createElement("quantity");
-        quantityElement.appendChild(document.createTextNode(quantity));
-        orderElement.appendChild(quantityElement);
-
-        // Gắn phần tử <Product> vào phần tử gốc <Products>
-        document.getDocumentElement().appendChild(orderElement);
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-
-        // Ghi tài liệu XML vào tệp
-        DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(xmlFile);
-        transformer.transform(source, result);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        // Xử lý ngoại lệ nếu có
-    }
-    }
+    }//GEN-LAST:event_kButton2ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
