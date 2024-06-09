@@ -56,12 +56,18 @@ public class Register extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        datetxt = new javax.swing.JTextField();
+        repasswordtxt = new javax.swing.JPasswordField();
         Register = new com.k33ptoo.components.KButton();
         jLabel4 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
         login = new com.k33ptoo.components.KButton();
+        jLabel5 = new javax.swing.JLabel();
+        usertxt = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        fullnametxt = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        passwordtxt = new javax.swing.JPasswordField();
+        idtxt = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -74,36 +80,37 @@ public class Register extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(51, 153, 255));
         jLabel1.setText("WELCOME TO TECH");
-        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 50, 240, 30));
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, 240, 30));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(51, 153, 255));
         jLabel2.setText("Re-enter password:");
-        jPanel4.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 290, -1, -1));
+        jPanel4.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 350, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(51, 153, 255));
-        jLabel3.setText("Username:");
-        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, -1, -1));
+        jLabel3.setText("Birth Date:");
+        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 250, 80, -1));
 
-        jTextField2.setBackground(new java.awt.Color(238, 235, 235));
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jTextField2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextField2.setToolTipText("");
-        jTextField2.setActionCommand("<Not Set>");
-        jTextField2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTextField2.setCaretColor(new java.awt.Color(51, 153, 255));
-        jTextField2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jTextField2.setSelectionColor(new java.awt.Color(51, 153, 255));
-        jPanel4.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 160, 340, 35));
+        datetxt.setBackground(new java.awt.Color(238, 235, 235));
+        datetxt.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        datetxt.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        datetxt.setToolTipText("");
+        datetxt.setActionCommand("<Not Set>");
+        datetxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        datetxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        datetxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        datetxt.setSelectionColor(new java.awt.Color(51, 153, 255));
+        jPanel4.add(datetxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 240, 340, 35));
 
-        jPasswordField1.setBackground(new java.awt.Color(238, 235, 235));
-        jPasswordField1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jPasswordField1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPasswordField1.setCaretColor(new java.awt.Color(51, 153, 255));
-        jPasswordField1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPasswordField1.setDoubleBuffered(true);
-        jPanel4.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 320, 340, 35));
+        repasswordtxt.setBackground(new java.awt.Color(238, 235, 235));
+        repasswordtxt.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        repasswordtxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        repasswordtxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        repasswordtxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        repasswordtxt.setDoubleBuffered(true);
+        repasswordtxt.setEchoChar('.');
+        jPanel4.add(repasswordtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 340, 340, 35));
 
         Register.setForeground(new java.awt.Color(0, 0, 0));
         Register.setText("REGISTER");
@@ -122,20 +129,12 @@ public class Register extends javax.swing.JFrame {
                 RegisterActionPerformed(evt);
             }
         });
-        jPanel4.add(Register, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 370, 300, 40));
+        jPanel4.add(Register, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 400, 300, 40));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(51, 153, 255));
         jLabel4.setText("Password:");
-        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, -1, -1));
-
-        jPasswordField2.setBackground(new java.awt.Color(238, 235, 235));
-        jPasswordField2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jPasswordField2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jPasswordField2.setCaretColor(new java.awt.Color(51, 153, 255));
-        jPasswordField2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        jPasswordField2.setDoubleBuffered(true);
-        jPanel4.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 240, 340, 35));
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 300, -1, -1));
 
         login.setForeground(new java.awt.Color(0, 0, 0));
         login.setText("LOGIN");
@@ -153,7 +152,69 @@ public class Register extends javax.swing.JFrame {
                 loginActionPerformed(evt);
             }
         });
-        jPanel4.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 430, 300, 40));
+        jPanel4.add(login, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 460, 300, 40));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(51, 153, 255));
+        jLabel5.setText("Username:");
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 100, -1, -1));
+
+        usertxt.setBackground(new java.awt.Color(238, 235, 235));
+        usertxt.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        usertxt.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        usertxt.setToolTipText("");
+        usertxt.setActionCommand("<Not Set>");
+        usertxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        usertxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        usertxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        usertxt.setSelectionColor(new java.awt.Color(51, 153, 255));
+        jPanel4.add(usertxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 90, 340, 35));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(51, 153, 255));
+        jLabel6.setText("Full Name:");
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, -1, -1));
+
+        fullnametxt.setBackground(new java.awt.Color(238, 235, 235));
+        fullnametxt.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        fullnametxt.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        fullnametxt.setToolTipText("");
+        fullnametxt.setActionCommand("<Not Set>");
+        fullnametxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        fullnametxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        fullnametxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        fullnametxt.setSelectionColor(new java.awt.Color(51, 153, 255));
+        jPanel4.add(fullnametxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 140, 340, 35));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(51, 153, 255));
+        jLabel7.setText("ID:");
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, -1, -1));
+
+        passwordtxt.setBackground(new java.awt.Color(238, 235, 235));
+        passwordtxt.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        passwordtxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        passwordtxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        passwordtxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        passwordtxt.setDoubleBuffered(true);
+        passwordtxt.setEchoChar('.');
+        passwordtxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passwordtxtActionPerformed(evt);
+            }
+        });
+        jPanel4.add(passwordtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 290, 340, 35));
+
+        idtxt.setBackground(new java.awt.Color(238, 235, 235));
+        idtxt.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        idtxt.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        idtxt.setToolTipText("");
+        idtxt.setActionCommand("<Not Set>");
+        idtxt.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        idtxt.setCaretColor(new java.awt.Color(51, 153, 255));
+        idtxt.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        idtxt.setSelectionColor(new java.awt.Color(51, 153, 255));
+        jPanel4.add(idtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 190, 340, 35));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, 530));
 
@@ -163,9 +224,9 @@ public class Register extends javax.swing.JFrame {
     
 
     private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterActionPerformed
-        String username = jTextField2.getText().trim();
-        String password = new String(jPasswordField2.getPassword());
-        String reEnterPassword = new String(jPasswordField1.getPassword());
+        String username = datetxt.getText().trim();
+        String password = new String(passwordtxt.getPassword());
+        String reEnterPassword = new String(repasswordtxt.getPassword());
 
         if (username.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Invalid Username", JOptionPane.ERROR_MESSAGE);
@@ -210,6 +271,10 @@ public class Register extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_loginActionPerformed
 
+    private void passwordtxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordtxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwordtxtActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -248,15 +313,21 @@ public class Register extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.k33ptoo.components.KButton Register;
+    private javax.swing.JTextField datetxt;
+    private javax.swing.JTextField fullnametxt;
+    private javax.swing.JTextField idtxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField2;
     private com.k33ptoo.components.KButton login;
+    private javax.swing.JPasswordField passwordtxt;
+    private javax.swing.JPasswordField repasswordtxt;
+    private javax.swing.JTextField usertxt;
     // End of variables declaration//GEN-END:variables
 
 }

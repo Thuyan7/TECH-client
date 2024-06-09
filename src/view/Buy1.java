@@ -154,7 +154,7 @@ public class Buy1 extends javax.swing.JFrame {
 
         try {
             java.sql.Connection conn = DatabaseConnection.getConnection();
-            String sql = "INSERT INTO user (name, id, phone) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO customer (name, id, phone) VALUES (?, ?, ?)";
             java.sql.PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, name);
             statement.setString(2, cccd);
