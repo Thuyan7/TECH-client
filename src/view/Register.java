@@ -188,8 +188,8 @@ public class Register extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(51, 153, 255));
-        jLabel7.setText("ID:");
-        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, -1, -1));
+        jLabel7.setText("Citizen ID:");
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 200, -1, -1));
 
         passwordtxt.setBackground(new java.awt.Color(238, 235, 235));
         passwordtxt.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -224,12 +224,30 @@ public class Register extends javax.swing.JFrame {
     
 
     private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterActionPerformed
-        String username = datetxt.getText().trim();
+        String username = usertxt.getText().trim();
         String password = new String(passwordtxt.getPassword());
+        String fullName = fullnametxt.getText().trim();
+        String citizenID = idtxt.getText();
+        String date = datetxt.getText().trim();
         String reEnterPassword = new String(repasswordtxt.getPassword());
 
         if (username.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Invalid Username", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (fullName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Full Name cannot be empty.", "Invalid Full Name", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (citizenID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Citizen ID cannot be empty.", "Invalid Citizen ID", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (date.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Date cannot be empty.", "Invalid Date", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -238,7 +256,7 @@ public class Register extends javax.swing.JFrame {
             return;
         }
 
-        boolean isRegistered = registerUser(username, password);
+        boolean isRegistered = registerUser(username, password,fullName,citizenID,date);
         if (isRegistered) {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -246,14 +264,14 @@ public class Register extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RegisterActionPerformed
     
-     private boolean registerUser(String username, String password) {
+     private boolean registerUser(String username, String password, String fullname, String citizenID, String date) {
         try (Socket socket = new Socket("192.168.1.22", 1236);
              OutputStream output = socket.getOutputStream();
              ObjectOutputStream objectOutput = new ObjectOutputStream(output);
              InputStream input = socket.getInputStream();
              ObjectInputStream objectInput = new ObjectInputStream(input)) {
 
-            objectOutput.writeObject(new String[]{username, password});
+            objectOutput.writeObject(new String[]{username, password, fullname, citizenID, date});
             objectOutput.flush();
 
             boolean isRegistered = objectInput.readBoolean();

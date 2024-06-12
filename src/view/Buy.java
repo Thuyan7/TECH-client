@@ -29,14 +29,14 @@ import org.w3c.dom.Element;
  *
  * @author AN
  */
-public class Buy1 extends javax.swing.JFrame {
+public class Buy extends javax.swing.JFrame {
 
     private Document document;
 
     /**
      * Creates new form Buy1
      */
-    public Buy1(String productName, String price) {
+    public Buy(String productName, String price) {
         initComponents();
         nameProduct.setText(productName);
         priceProduct.setText(price);
@@ -246,13 +246,13 @@ public class Buy1 extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Buy1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buy.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Buy1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buy.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Buy1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buy.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Buy1.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Buy.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         FlatMacLightLaf.setup();
@@ -260,7 +260,7 @@ public class Buy1 extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Buy1("ProductName", "Price").setVisible(true);
+                new Buy("ProductName", "Price").setVisible(true);
             }
         });
     }

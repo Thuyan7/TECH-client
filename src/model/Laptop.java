@@ -14,6 +14,7 @@ public class Laptop implements Serializable{
     private int id;
     private String name;
     private String price;
+    private int quantity;
     private String image;
     private String description;
    
@@ -21,15 +22,17 @@ public class Laptop implements Serializable{
         this.id = 0;
         this.name="";
         this.image="";
+        this.quantity = 0;
         this.price="";
         this.description="";
              
                 
     }
-    public Laptop(int id,String name, String price, String image, String description) {
+    public Laptop(int id,String name, String price,int quantity, String image, String description) {
         this.id=id;
         this.name = name;
         this.price = price;
+        this.quantity =quantity;
         this.image = image;
         this.description = description;
     }
@@ -55,6 +58,15 @@ public class Laptop implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    
 
     public String getPrice() {
         return price;

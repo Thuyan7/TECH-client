@@ -1,9 +1,13 @@
 package DataBase;
 
+import database.DatabaseConnection;
 import model.Laptop;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,4 +109,31 @@ public class LaptopManager {
         }
         return laptop;
     }
+    
+    public static List<Laptop> getLaptopByName(String name) {
+    List<Laptop> laptops = new ArrayList<>();
+    String sql = "SELECT * FROM laptop WHERE name LIKE ?";
+    
+    try (Connection con = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setString(1, "%" + name + "%");
+        ResultSet rs = pstmt.executeQuery();
+        
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String laptopName = rs.getString("name");
+            String price = rs.getString("price");
+            int quantity = rs.getInt("quantity");
+            String image = rs.getString("image");
+            String description = rs.getString("description");
+
+            Laptop laptop = new Laptop(id, laptopName, price, quantity, image, description);
+            laptops.add(laptop);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return laptops;
+}
 }

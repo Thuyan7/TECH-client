@@ -1,8 +1,12 @@
 package DataBase;
 
+import database.DatabaseConnection;
 import model.Phone;
 import java.io.*;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import model.Laptop;
@@ -109,4 +113,31 @@ System.out.println("Phone updated successfully!");
         }
         return phone;
     }
+     public static List<Phone> getPhoneByName(String name) {
+    List<Phone> phones = new ArrayList<>();
+    String sql = "SELECT * FROM phone WHERE name LIKE ?";
+    
+    try (Connection con = DatabaseConnection.getConnection();
+         PreparedStatement pstmt = con.prepareStatement(sql)) {
+        
+        pstmt.setString(1, "%" + name + "%");
+        ResultSet rs = pstmt.executeQuery();
+        
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String phoneName = rs.getString("name");
+            String price = rs.getString("price");
+            int quantity = rs.getInt("quantity");
+            String image = rs.getString("image");
+            String description = rs.getString("description");
+
+            Phone phone = new Phone(id, phoneName, price, quantity, image, description);
+            phones.add(phone);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return phones;
+
+     }
 }

@@ -19,7 +19,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.dnd.DragSourceListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,7 +120,7 @@ public class Home extends javax.swing.JFrame {
             buyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Buy1 detailFrame = new Buy1(laptop.getName(), laptop.getPrice());
+                    Buy detailFrame = new Buy(laptop.getName(), laptop.getPrice());
                     detailFrame.setVisible(true);
                 }
             });
@@ -140,6 +143,87 @@ public class Home extends javax.swing.JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setViewportView(scrollPane);
     }
+    
+    private void displayLaptopbyName() {
+        Color mainColor = new Color(51, 153, 255);
+        String searchText = searchtxt.getText();
+        List<Laptop> laptops = LaptopManager.getLaptopByName(searchText);
+        
+        JPanel displayPanel = new JPanel(new GridBagLayout());
+        displayPanel.setBackground(Color.WHITE);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST; 
+        gbc.insets = new Insets(0, 0, 50, 120);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        for (Laptop laptop : laptops) {
+            KGradientPanel laptopPanel = new KGradientPanel();
+            laptopPanel.setLayout(new BoxLayout(laptopPanel, BoxLayout.Y_AXIS));
+            laptopPanel.setPreferredSize(new Dimension(265,260));
+            laptopPanel.setBackground(Color.WHITE);
+            laptopPanel.setkStartColor(mainColor);
+            laptopPanel.setkEndColor(Color.white);
+            laptopPanel.setkBorderRadius(100);
+            
+            ImageIcon imageIcon = new ImageIcon(laptop.getImage());
+            JLabel imageLabel = new JLabel(imageIcon);
+            imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            laptopPanel.add(Box.createVerticalStrut(10));
+            laptopPanel.add(imageLabel);
+
+            JLabel nameLabel = new JLabel(laptop.getName());
+            nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            nameLabel.setFont(new Font("Segoe UI", 1, 12));
+            laptopPanel.add(Box.createVerticalStrut(10));
+            laptopPanel.add(nameLabel);
+
+            JLabel descriptionLabel = new JLabel(laptop.getDescription());
+            descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            descriptionLabel.setFont(new Font("Segoe UI", 1, 12));
+            laptopPanel.add(Box.createVerticalStrut(10));
+            laptopPanel.add(descriptionLabel);
+
+            JLabel priceLabel = new JLabel(laptop.getPrice());
+            priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            priceLabel.setFont(new Font("Segoe UI", 1, 12));
+            priceLabel.setForeground(Color.red);
+            laptopPanel.add(Box.createVerticalStrut(10));
+            laptopPanel.add(priceLabel);
+
+            KButton buyButton = new KButton();
+            buyButton.setText("BUY");
+            buyButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Buy detailFrame = new Buy(laptop.getName(), laptop.getPrice());
+                    detailFrame.setVisible(true);
+                }
+            });
+            buyButton.setBackground(mainColor);
+            buyButton.setkAllowGradient(false);
+            buyButton.setkBorderRadius(30);
+            buyButton.setkBackGroundColor(mainColor);
+            buyButton.setkSelectedColor(Color.WHITE);
+            buyButton.setkHoverForeGround(Color.BLACK);
+            laptopPanel.add(Box.createVerticalStrut(10));
+            buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            laptopPanel.add(buyButton);
+
+            displayPanel.add(laptopPanel, gbc);
+            gbc.gridx++;
+            if (gbc.gridx > 2) {
+                gbc.gridx = 0;
+                gbc.gridy++;
+            }
+        }
+
+        JScrollPane scrollPane = new JScrollPane(displayPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setViewportView(scrollPane);
+}
     private void displayPhone() {
         Color mainColor = new Color(51, 153, 255);
         PhoneManager phoneManager = new PhoneManager();
@@ -193,7 +277,7 @@ public class Home extends javax.swing.JFrame {
             buyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Buy1 detailFrame = new Buy1(phone.getName(), phone.getPrice());
+                    Buy detailFrame = new Buy(phone.getName(), phone.getPrice());
                     detailFrame.setVisible(true);
                 }
             });
@@ -214,6 +298,86 @@ public class Home extends javax.swing.JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setViewportView(scrollPane);
     }
+    
+    private void displayPhonebyName() {
+        Color mainColor = new Color(51, 153, 255);
+        String searchText = searchtxt.getText();
+        List<Phone> phones = PhoneManager.getPhoneByName(searchText);
+        JPanel displayPanel = new JPanel(new GridBagLayout());
+        displayPanel.setBackground(Color.WHITE);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTHWEST; 
+        gbc.insets = new Insets(0, 0, 50, 120);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+       for (Phone phone : phones) {
+            KGradientPanel phonePanel = new KGradientPanel();
+            phonePanel.setLayout(new BoxLayout(phonePanel, BoxLayout.Y_AXIS));
+            phonePanel.setPreferredSize(new Dimension(265,260));
+            phonePanel.setBackground(Color.WHITE);
+            phonePanel.setkStartColor(mainColor);
+            phonePanel.setkEndColor(Color.white);
+            phonePanel.setkBorderRadius(100);
+
+            ImageIcon imageIcon = new ImageIcon(phone.getImage());
+            JLabel imageLabel = new JLabel(imageIcon);
+            imageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            phonePanel.add(Box.createVerticalStrut(10));
+            phonePanel.add(imageLabel);
+
+            JLabel nameLabel = new JLabel(phone.getName());
+            nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            nameLabel.setFont(new Font("Segoe UI", 1, 12));
+            phonePanel.add(Box.createVerticalStrut(10));
+            phonePanel.add(nameLabel);
+
+            JLabel descriptionLabel = new JLabel(phone.getDescription());
+            descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            descriptionLabel.setFont(new Font("Segoe UI", 1, 12));
+            phonePanel.add(Box.createVerticalStrut(10));
+            phonePanel.add(descriptionLabel);
+
+            JLabel priceLabel = new JLabel(phone.getPrice());
+            priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            priceLabel.setFont(new Font("Segoe UI", 1, 12));
+            priceLabel.setForeground(Color.red);
+            phonePanel.add(Box.createVerticalStrut(10));
+            phonePanel.add(priceLabel);
+
+            KButton buyButton = new KButton();
+            buyButton.setText("BUY");
+            buyButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Buy detailFrame = new Buy(phone.getName(), phone.getPrice());
+                    detailFrame.setVisible(true);
+                }
+            });
+            buyButton.setBackground(mainColor);
+            buyButton.setkAllowGradient(false);
+            buyButton.setkBorderRadius(30);
+            buyButton.setkBackGroundColor(mainColor);
+            buyButton.setkSelectedColor(Color.WHITE);
+            buyButton.setkHoverForeGround(Color.BLACK);
+            phonePanel.add(Box.createVerticalStrut(10));
+            buyButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            phonePanel.add(buyButton);
+
+            displayPanel.add(phonePanel, gbc);
+            gbc.gridx++;
+            if (gbc.gridx > 2) {
+                gbc.gridx = 0;
+                gbc.gridy++;
+            }
+        }
+
+        JScrollPane scrollPane = new JScrollPane(displayPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setViewportView(scrollPane);
+}
 
 
 
@@ -239,6 +403,9 @@ public class Home extends javax.swing.JFrame {
         closelb = new javax.swing.JLabel();
         deletelb = new javax.swing.JLabel();
         updatelb = new javax.swing.JLabel();
+        searchtxt = new javax.swing.JTextField();
+        searchbt = new com.k33ptoo.components.KButton();
+        typetxt = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
 
@@ -420,6 +587,28 @@ public class Home extends javax.swing.JFrame {
 
         kGradientPanel1.add(setting, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 0, 0, 60));
 
+        searchtxt.setName(""); // NOI18N
+        kGradientPanel1.add(searchtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 290, 30));
+
+        searchbt.setText("SEARCH");
+        searchbt.setkBackGroundColor(new java.awt.Color(51, 153, 255));
+        searchbt.setkEndColor(new java.awt.Color(255, 255, 255));
+        searchbt.setkHoverEndColor(new java.awt.Color(51, 153, 255));
+        searchbt.setkHoverForeGround(new java.awt.Color(0, 0, 0));
+        searchbt.setkHoverStartColor(new java.awt.Color(255, 255, 255));
+        searchbt.setkPressedColor(new java.awt.Color(255, 255, 255));
+        searchbt.setkSelectedColor(new java.awt.Color(255, 255, 255));
+        searchbt.setkStartColor(new java.awt.Color(51, 153, 255));
+        searchbt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchbtActionPerformed(evt);
+            }
+        });
+        kGradientPanel1.add(searchbt, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 20, 100, 30));
+
+        typetxt.setVisible(false);
+        kGradientPanel1.add(typetxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
+
         jPanel1.add(kGradientPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 1060, 60));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -435,7 +624,7 @@ public class Home extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 60, 1060, 660));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 1060, 660));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -497,6 +686,15 @@ public class Home extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_historyActionPerformed
 
+    private void searchbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtActionPerformed
+        String types = typetxt.getText();
+        if (types.equals("SMARTPHONE")) {
+            displayPhonebyName();
+        } else {
+            displayLaptopbyName();
+        }
+    }//GEN-LAST:event_searchbtActionPerformed
+
     public static void main(String args[]) { 
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -545,7 +743,10 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private com.k33ptoo.components.KGradientPanel kGradientPanel1;
     private javax.swing.JLabel logOut;
+    private com.k33ptoo.components.KButton searchbt;
+    private javax.swing.JTextField searchtxt;
     private com.k33ptoo.components.KGradientPanel setting;
+    private javax.swing.JTextField typetxt;
     private javax.swing.JLabel updatelb;
     // End of variables declaration//GEN-END:variables
 
