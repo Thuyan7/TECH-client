@@ -11,8 +11,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.*;
 import java.awt.*;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -57,7 +62,7 @@ public class Buy extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         phonetxt = new javax.swing.JTextField();
         nametxt = new javax.swing.JTextField();
-        cccdtxt = new javax.swing.JTextField();
+        citizenidtxt = new javax.swing.JTextField();
         priceProduct = new javax.swing.JLabel();
         nameProduct = new javax.swing.JLabel();
         kButton1 = new com.k33ptoo.components.KButton();
@@ -91,7 +96,7 @@ public class Buy extends javax.swing.JFrame {
             }
         });
         jPanel1.add(nametxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 150, 300, 30));
-        jPanel1.add(cccdtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 300, 30));
+        jPanel1.add(citizenidtxt, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 300, 30));
 
         priceProduct.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         priceProduct.setForeground(new java.awt.Color(255, 0, 51));
@@ -145,90 +150,66 @@ public class Buy extends javax.swing.JFrame {
   
 
     private void kButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kButton2ActionPerformed
-        String name = nametxt.getText();
-        String cccd = cccdtxt.getText();
+        String customerName = nametxt.getText();
+        String citizenId = citizenidtxt.getText();
         String phone = phonetxt.getText();
         String productName = nameProduct.getText();
         String price = priceProduct.getText();
-        String quantity = quantityTxt.getValue().toString();
+        String quantity =quantityTxt.getValue().toString();
 
-        try {
-            java.sql.Connection conn = DatabaseConnection.getConnection();
-            String sql = "INSERT INTO customer (name, id, phone) VALUES (?, ?, ?)";
-            java.sql.PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, name);
-            statement.setString(2, cccd);
-            statement.setString(3, phone);
-
-            statement.executeUpdate();
-            statement.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Xử lý ngoại lệ nếu có
-    }                                        
-        try {
-            File xmlFile = new File("purchase.xml");
-            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document;
-
-            if (xmlFile.exists()) {
-                // Nếu tệp đã tồn tại, load tài liệu XML từ tệp đó
-                document = docBuilder.parse(xmlFile);
-            } else {
-                // Nếu tệp chưa tồn tại, tạo một tài liệu XML mới
-                document = docBuilder.newDocument();
-                // Tạo phần tử gốc <Products>
-                Element productsElement = document.createElement("Products");
-                document.appendChild(productsElement);
-            }
-
-            // Tạo phần tử con <Product> và các phần tử con của nó
-            Element orderElement = document.createElement("Product");
-
-            Element productNameElement = document.createElement("name");
-            productNameElement.appendChild(document.createTextNode(productName));
-            orderElement.appendChild(productNameElement);
-
-            Element priceElement = document.createElement("price");
-            priceElement.appendChild(document.createTextNode(price));
-            orderElement.appendChild(priceElement);
-
-            Element quantityElement = document.createElement("quantity");
-            quantityElement.appendChild(document.createTextNode(quantity));
-            orderElement.appendChild(quantityElement);
-
-            // Gắn phần tử <Product> vào phần tử gốc <Products>
-            document.getDocumentElement().appendChild(orderElement);
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-
-            // Ghi tài liệu XML vào tệp
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(xmlFile);
-            transformer.transform(source, result);
-            
-            String hostname = "192.168.1.8";
-            int port = 1234;
-
-            try (Socket socket = new Socket(hostname, port)) {
-                FileInputStream fileInputStream = new FileInputStream(xmlFile);
-                OutputStream outputStream = socket.getOutputStream();
-
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-
-                fileInputStream.close();
-            } 
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    boolean isSaveCustomer = saveCustomer(customerName, citizenId, phone);
+    if (isSaveCustomer) {
+        boolean isBuyProduct = buyProduct(productName, price, quantity);
+        if (isBuyProduct) {
+            JOptionPane.showMessageDialog(this, "Purchase successful!");
+        } else {
+            JOptionPane.showMessageDialog(this, "Purchase failed. Please try again.");
         }
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to save customer information. Please try again.");
+    }
     }//GEN-LAST:event_kButton2ActionPerformed
     
+        private boolean saveCustomer(String customerName, String citizenId, String phone) {
+        try (Socket socket = new Socket(" 192.168.1.17", 12345);
+             OutputStream output = socket.getOutputStream();
+             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
+             InputStream input = socket.getInputStream();
+             ObjectInputStream objectInput = new ObjectInputStream(input)) {
+
+            objectOutput.writeObject(new String[]{customerName, citizenId, phone});
+            objectOutput.flush();
+
+            boolean isSaved = objectInput.readBoolean();
+            return isSaved;
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    private boolean buyProduct(String productName, String price, String quantity) {
+        try (Socket socket = new Socket(" 192.168.1.17", 12345); 
+             OutputStream output = socket.getOutputStream();
+             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
+             InputStream input = socket.getInputStream();
+             ObjectInputStream objectInput = new ObjectInputStream(input)) {
+
+            objectOutput.writeObject(new String[]{productName, price, quantity});
+            objectOutput.flush();
+
+            boolean isBought = objectInput.readBoolean();
+            return isBought;
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    
+
     /**
      * @param args the command line arguments
      */
@@ -266,7 +247,7 @@ public class Buy extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField cccdtxt;
+    private javax.swing.JTextField citizenidtxt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
