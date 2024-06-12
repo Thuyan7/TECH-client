@@ -42,13 +42,13 @@ public class Login extends javax.swing.JFrame {
     }
     
 
-    private boolean validateLogin(String username, String password) {
+    private boolean validateLogin(String requestType,String username, String password) {
         try (Socket socket = new Socket("192.168.1.22", 1236);
              OutputStream output = socket.getOutputStream(); 
              ObjectOutputStream objectOutput = new ObjectOutputStream(output);
              InputStream input = socket.getInputStream();
              ObjectInputStream objectInput = new ObjectInputStream(input)) {
-            objectOutput.writeObject(new String[]{"login", username, password});
+            objectOutput.writeObject(new String[]{username, password});
             objectOutput.flush();
             return objectInput.readBoolean();
         } catch (IOException ex) {
@@ -170,7 +170,7 @@ public class Login extends javax.swing.JFrame {
             return;
         }
 
-        boolean isLoggedIn = validateLogin(username, password);
+        boolean isLoggedIn = validateLogin("login",username, password);
         if (isLoggedIn) {
             JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             new Home().setVisible(true);

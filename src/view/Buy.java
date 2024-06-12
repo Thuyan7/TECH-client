@@ -157,27 +157,24 @@ public class Buy extends javax.swing.JFrame {
         String price = priceProduct.getText();
         String quantity =quantityTxt.getValue().toString();
 
-    boolean isSaveCustomer = saveCustomer(customerName, citizenId, phone);
-    if (isSaveCustomer) {
-        boolean isBuyProduct = buyProduct(productName, price, quantity);
+   
+       
+        boolean isBuyProduct = buyProduct("buy",customerName,citizenId,phone,productName, price, quantity);
         if (isBuyProduct) {
-            JOptionPane.showMessageDialog(this, "Purchase successful!");
+            JOptionPane.showMessageDialog(this,"Purchase successful!");
         } else {
             JOptionPane.showMessageDialog(this, "Purchase failed. Please try again.");
         }
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to save customer information. Please try again.");
-    }
     }//GEN-LAST:event_kButton2ActionPerformed
     
-        private boolean saveCustomer(String customerName, String citizenId, String phone) {
+        private boolean buyProduct(String requestType,String customerName, String citizenId, String phone,String productName, String price, String quantity) {
         try (Socket socket = new Socket(" 192.168.1.17", 12345);
              OutputStream output = socket.getOutputStream();
              ObjectOutputStream objectOutput = new ObjectOutputStream(output);
              InputStream input = socket.getInputStream();
              ObjectInputStream objectInput = new ObjectInputStream(input)) {
 
-            objectOutput.writeObject(new String[]{customerName, citizenId, phone});
+            objectOutput.writeObject(new String[]{customerName, citizenId, phone, productName,price,quantity});
             objectOutput.flush();
 
             boolean isSaved = objectInput.readBoolean();
@@ -189,24 +186,6 @@ public class Buy extends javax.swing.JFrame {
         return false;
     }
 
-    private boolean buyProduct(String productName, String price, String quantity) {
-        try (Socket socket = new Socket(" 192.168.1.17", 12345); 
-             OutputStream output = socket.getOutputStream();
-             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-             InputStream input = socket.getInputStream();
-             ObjectInputStream objectInput = new ObjectInputStream(input)) {
-
-            objectOutput.writeObject(new String[]{productName, price, quantity});
-            objectOutput.flush();
-
-            boolean isBought = objectInput.readBoolean();
-            return isBought;
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
 
     
 

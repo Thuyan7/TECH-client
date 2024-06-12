@@ -256,7 +256,7 @@ public class Register extends javax.swing.JFrame {
             return;
         }
 
-        boolean isRegistered = registerUser(username, password,fullName,citizenID,date);
+        boolean isRegistered = registerUser("register",username, password,fullName,citizenID,date);
         if (isRegistered) {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
@@ -264,7 +264,7 @@ public class Register extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RegisterActionPerformed
     
-     private boolean registerUser(String username, String password, String fullname, String citizenID, String date) {
+     private boolean registerUser(String requestType,String username, String password, String fullname, String citizenID, String date) {
         try (Socket socket = new Socket("192.168.1.22", 1236);
              OutputStream output = socket.getOutputStream();
              ObjectOutputStream objectOutput = new ObjectOutputStream(output);
