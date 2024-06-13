@@ -1,7 +1,7 @@
 package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import database.DatabaseConnection;
+import controller.RegisterController;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,18 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import javax.swing.JOptionPane;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.*;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PublicKey;
-import java.security.PrivateKey;
-import java.security.KeyFactory;
-import java.security.spec.X509EncodedKeySpec;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Base64;
-import javax.crypto.Cipher;
+import java.util.regex.Pattern;;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -32,9 +21,7 @@ import javax.crypto.Cipher;
  * @author AN
  */
 public class Register extends javax.swing.JFrame {
-
     int attempts;
-    private static PublicKey serverPublicKey;
 
     /**
      * Creates new form Login
@@ -230,58 +217,24 @@ public class Register extends javax.swing.JFrame {
         String citizenID = idtxt.getText();
         String date = datetxt.getText().trim();
         String reEnterPassword = new String(repasswordtxt.getPassword());
-
-        if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Invalid Username", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         
-        if (fullName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Full Name cannot be empty.", "Invalid Full Name", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        RegisterController controller = new RegisterController();
         
-        if (citizenID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Citizen ID cannot be empty.", "Invalid Citizen ID", JOptionPane.ERROR_MESSAGE);
+        if (!controller.validateInput(username, password, fullName, citizenID, date)) {
             return;
         }
-        
-        if (date.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Date cannot be empty.", "Invalid Date", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
         if (!password.equals(reEnterPassword)) {
             JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Mismatch", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        boolean isRegistered = registerUser("register",username, password,fullName,citizenID,date);
+        
+        boolean isRegistered = controller.register(username, password, fullName, citizenID, date);
         if (isRegistered) {
             JOptionPane.showMessageDialog(this, "Registration Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Failed to register user. Please try again later.", "Registration Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_RegisterActionPerformed
-    
-     private boolean registerUser(String requestType,String username, String password, String fullname, String citizenID, String date) {
-        try (Socket socket = new Socket("192.168.1.22", 1236);
-             OutputStream output = socket.getOutputStream();
-             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-             InputStream input = socket.getInputStream();
-             ObjectInputStream objectInput = new ObjectInputStream(input)) {
-
-            objectOutput.writeObject(new String[]{username, password, fullname, citizenID, date});
-            objectOutput.flush();
-
-            boolean isRegistered = objectInput.readBoolean();
-            return isRegistered;
-
-        } catch (EOFException eofEx) {
-        } catch (IOException ioEx) {
-        }
-        return false;
-}
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
         Login login = new Login();

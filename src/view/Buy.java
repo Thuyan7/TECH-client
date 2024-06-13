@@ -5,38 +5,22 @@
 package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import com.sun.jdi.connect.spi.Connection;
-import database.DatabaseConnection;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import controller.BuyController;
 import javax.swing.*;
-import java.awt.*;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.sql.SQLException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.util.regex.Pattern;
+
 
 /**
  *
  * @author AN
  */
 public class Buy extends javax.swing.JFrame {
-
-    private Document document;
 
     /**
      * Creates new form Buy1
@@ -155,38 +139,19 @@ public class Buy extends javax.swing.JFrame {
         String phone = phonetxt.getText();
         String productName = nameProduct.getText();
         String price = priceProduct.getText();
-        String quantity =quantityTxt.getValue().toString();
+        String quantity = quantityTxt.getValue().toString();
 
-   
-       
-        boolean isBuyProduct = buyProduct("buy",customerName,citizenId,phone,productName, price, quantity);
+        if (!BuyController.validateInput(customerName, citizenId, phone)) {
+            return;
+        }
+
+        boolean isBuyProduct = BuyController.buyProduct(customerName, citizenId, phone, productName, price, quantity);
         if (isBuyProduct) {
-            JOptionPane.showMessageDialog(this,"Purchase successful!");
+            JOptionPane.showMessageDialog(this, "Purchase successful!");
         } else {
             JOptionPane.showMessageDialog(this, "Purchase failed. Please try again.");
         }
     }//GEN-LAST:event_kButton2ActionPerformed
-    
-        private boolean buyProduct(String requestType,String customerName, String citizenId, String phone,String productName, String price, String quantity) {
-        try (Socket socket = new Socket(" 192.168.1.17", 12345);
-             OutputStream output = socket.getOutputStream();
-             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-             InputStream input = socket.getInputStream();
-             ObjectInputStream objectInput = new ObjectInputStream(input)) {
-
-            objectOutput.writeObject(new String[]{customerName, citizenId, phone, productName,price,quantity});
-            objectOutput.flush();
-
-            boolean isSaved = objectInput.readBoolean();
-            return isSaved;
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
-
     
 
     /**

@@ -1,24 +1,13 @@
 package view;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import database.DatabaseConnection;
+import controller.LoginController;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Base64;
-import javax.crypto.Cipher;
 import javax.swing.JOptionPane;
 
 /*
@@ -32,28 +21,14 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
     int attempts;
-
+    private final LoginController loginController;
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
+        loginController = new LoginController();
 
-    }
-    
-
-    private boolean validateLogin(String requestType,String username, String password) {
-        try (Socket socket = new Socket("192.168.1.22", 1236);
-             OutputStream output = socket.getOutputStream(); 
-             ObjectOutputStream objectOutput = new ObjectOutputStream(output);
-             InputStream input = socket.getInputStream();
-             ObjectInputStream objectInput = new ObjectInputStream(input)) {
-            objectOutput.writeObject(new String[]{username, password});
-            objectOutput.flush();
-            return objectInput.readBoolean();
-        } catch (IOException ex) {
-            return false;
-        }
     }
 
     /**
@@ -170,19 +145,13 @@ public class Login extends javax.swing.JFrame {
             return;
         }
 
-        boolean isLoggedIn = validateLogin("login",username, password);
+        boolean isLoggedIn = loginController.authenticate(username, password);
         if (isLoggedIn) {
             JOptionPane.showMessageDialog(this, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
             new Home().setVisible(true);
             this.dispose();
         } else {
-            attempts++;
-            if (attempts >= 3) {
-                JOptionPane.showMessageDialog(this, "Too many failed attempts. Exiting...", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
-            } else {
-                JOptionPane.showMessageDialog(this, "Incorrect username or password. Please try again.", "Login Failed", JOptionPane.ERROR_MESSAGE);
-            }
+            JOptionPane.showMessageDialog(this, "Incorrect username or password. Please try again.", "Login Failed", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_kButton1ActionPerformed
 
