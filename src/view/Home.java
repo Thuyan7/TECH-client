@@ -370,7 +370,6 @@ public class Home extends javax.swing.JFrame {
         btLaptop = new com.k33ptoo.components.KButton();
         btPhone = new com.k33ptoo.components.KButton();
         logOut = new javax.swing.JLabel();
-        history = new com.k33ptoo.components.KButton();
         kGradientPanel1 = new com.k33ptoo.components.KGradientPanel();
         setting = new com.k33ptoo.components.KGradientPanel();
         add = new javax.swing.JLabel();
@@ -436,25 +435,6 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
-        history.setText("PURCHASE HISTORY");
-        history.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        history.setkAllowGradient(false);
-        history.setkBackGroundColor(new java.awt.Color(51, 153, 255));
-        history.setkBorderRadius(20);
-        history.setkHoverForeGround(new java.awt.Color(0, 0, 0));
-        history.setkHoverStartColor(new java.awt.Color(0, 0, 0));
-        history.setkSelectedColor(new java.awt.Color(255, 255, 255));
-        history.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                historyMouseClicked(evt);
-            }
-        });
-        history.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout MenuLayout = new javax.swing.GroupLayout(Menu);
         Menu.setLayout(MenuLayout);
         MenuLayout.setHorizontalGroup(
@@ -470,9 +450,6 @@ public class Home extends javax.swing.JFrame {
                         .addGap(82, 82, 82))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
                         .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MenuLayout.createSequentialGroup()
-                        .addComponent(history, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
         MenuLayout.setVerticalGroup(
@@ -482,9 +459,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(btLaptop, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80)
                 .addComponent(btPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81)
-                .addComponent(history, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, Short.MAX_VALUE)
                 .addComponent(logOut)
                 .addGap(50, 50, 50))
         );
@@ -598,7 +573,7 @@ public class Home extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel2);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 1060, 660));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, 1060, 660));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -615,20 +590,6 @@ public class Home extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btLaptopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLaptopActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btLaptopActionPerformed
-
-    private void btLaptopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btLaptopMouseClicked
-        displayLaptop();
-           
-    }//GEN-LAST:event_btLaptopMouseClicked
-
-    private void btPhoneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btPhoneMouseClicked
-        displayPhone();
-       
-    }//GEN-LAST:event_btPhoneMouseClicked
-
     private void closelbMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_closelbMouseClicked
         
     }//GEN-LAST:event_closelbMouseClicked
@@ -636,13 +597,6 @@ public class Home extends javax.swing.JFrame {
     private void addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addMouseClicked
         
     }//GEN-LAST:event_addMouseClicked
-
-    private void logOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logOutMouseClicked
-
-        Login lg = new Login();
-        lg.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_logOutMouseClicked
 
     private void deletelbMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deletelbMouseClicked
 
@@ -652,14 +606,6 @@ public class Home extends javax.swing.JFrame {
     
     }//GEN-LAST:event_updatelbMouseClicked
 
-    private void historyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_historyMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_historyMouseClicked
-
-    private void historyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_historyActionPerformed
-
     private void searchbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbtActionPerformed
         String types = typetxt.getText();
         if (types.equals("SMARTPHONE")) {
@@ -668,6 +614,27 @@ public class Home extends javax.swing.JFrame {
             displayLaptopbyName();
         }
     }//GEN-LAST:event_searchbtActionPerformed
+
+    private void logOutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logOutMouseClicked
+
+        Login lg = new Login();
+        lg.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_logOutMouseClicked
+
+    private void btPhoneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btPhoneMouseClicked
+        displayPhone();
+
+    }//GEN-LAST:event_btPhoneMouseClicked
+
+    private void btLaptopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLaptopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btLaptopActionPerformed
+
+    private void btLaptopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btLaptopMouseClicked
+        displayLaptop();
+
+    }//GEN-LAST:event_btLaptopMouseClicked
 
     public static void main(String args[]) { 
         /* Set the Nimbus look and feel */
@@ -711,7 +678,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel closelb;
     private javax.swing.JLabel deletelb;
     private com.formdev.flatlaf.ui.FlatMenuUI flatMenuUI1;
-    private com.k33ptoo.components.KButton history;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
